@@ -1,0 +1,14 @@
+version: 1
+
+services:
+  bot:
+    type: worker
+    image: python:3.11-slim
+    build:
+      command: |
+        pip install --no-cache-dir -r requirements.txt
+        python -m bot.main
+    env:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - API_BASE_URL=${API_BASE_URL}
+      - MODE=PROD
