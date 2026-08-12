@@ -7,6 +7,10 @@ from bot.api_client import APIClient
 from bot.kb.reply import main_actions_kb
 import secrets
 
+from logging import Logger
+
+logger = Logger(__name__)
+
 router = Router()
 
 @router.message(Command("register"))
@@ -56,6 +60,14 @@ async def process_register_password(message: Message, state: FSMContext):
         # 2. Логин (чтобы получить токен)
         login_data = await api.login(username, password)
         token = login_data["access_token"]
+        api.token = token
+
+        try:
+            me = await api.get_me()
+            logger.info(f"Токен валиден, пользователь: {me}")
+        except Exception as e:
+            await message.answer(f"❌ Токен недействителен: {str(e)}")
+            return
 
         # 3. Привязываем tg_id к пользователю (если бекенд поддерживает)
         await api.update_tg_id(message.from_user.id)
@@ -111,6 +123,14 @@ async def process_login_password(message: Message, state: FSMContext):
     try:
         login_data = await api.login(username, password)
         token = login_data["access_token"]
+        api.token = token
+
+        try:
+            me = await api.get_me()
+            logger.info(f"Токен валиден, пользователь: {me}")
+        except Exception as e:
+            await message.answer(f"❌ Токен недействителен: {str(e)}")
+            return
 
         # Привязываем tg_id, если его ещё нет
         await api.update_tg_id(message.from_user.id)

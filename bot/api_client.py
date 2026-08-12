@@ -21,6 +21,14 @@ class APIClient:
 
     async def _request(self, method: str, endpoint: str, data: Optional[Dict] = None, params: Optional[Dict] = None) -> Any:
         url = f"{self.base_url}{endpoint}"
+        headers = self._headers()
+        
+        # ---- ОТЛАДОЧНЫЙ ВЫВОД ----
+        logger.debug(f"🔍 Request: {method} {url}")
+        logger.debug(f"📨 Headers: {headers}")
+        logger.debug(f"📦 Data: {data}")
+        logger.debug(f"🔗 Params: {params}")
+        # ---------------------------
         async with aiohttp.ClientSession() as session:
             async with session.request(method, url, json=data, params=params, headers=self._headers()) as resp:
                 if resp.status >= 400:
