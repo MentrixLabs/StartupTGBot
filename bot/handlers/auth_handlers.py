@@ -58,7 +58,7 @@ async def process_register_password(message: Message, state: FSMContext):
         token = login_data["access_token"]
 
         # 3. Привязываем tg_id к пользователю (если бекенд поддерживает)
-        await api.update_tg_id(token, message.from_user.id)
+        await api.update_tg_id(message.from_user.id)
 
         # 4. Сохраняем токен в FSM
         await state.update_data(token=token)
