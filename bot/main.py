@@ -13,7 +13,7 @@ from config import settings
 from bot.api_client import APIClient
 from bot.handlers import (
     start, look_goods, parsing, help, profile,
-    delete_last_message, report, seo_and_ig
+    delete_last_message, report, seo_and_ig, auth_handlers
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -35,6 +35,7 @@ async def main():
         delete_last_message.router,
         report.router,
         seo_and_ig.router,
+        auth_handlers.router
     )
 
     await dp.start_polling(bot)
