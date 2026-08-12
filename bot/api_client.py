@@ -42,8 +42,21 @@ class APIClient:
         return await self._request("POST", "/auth/register", data={"username": username, "email": email, "password": password})
 
     async def login(self, username: str, password: str) -> Dict:
-        return await self._request("POST", "/auth/login", data={"username": username, "password": password})
-
+        url = f"{self.base_url}/auth/login"
+        # Данные для form-urlencoded
+        payload = {"username": username, "password": password}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, data=payload) as resp:
+                if resp.status >= 400:
+                    try:
+                        error_detail = await resp.json()
+                        error_msg = error_detail.get("detail", f"Ошибка {resp.status}")
+                    except:
+                        error_msg = await resp.text()
+                    logger.error(f"API error {resp.status}: {error_msg}")
+                    raise Exception(f"API error {resp.status}: {error_msg}")
+                return await resp.json()
+        
     async def get_me(self) -> Dict:
         return await self._request("GET", "/auth/me")
 
