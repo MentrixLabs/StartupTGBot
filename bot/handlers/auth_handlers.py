@@ -113,7 +113,7 @@ async def process_login_password(message: Message, state: FSMContext):
         token = login_data["access_token"]
 
         # Привязываем tg_id, если его ещё нет
-        await api.update_tg_id(token, message.from_user.id)
+        await api.update_tg_id(message.from_user.id)
 
         await state.update_data(token=token)
         await state.clear()
