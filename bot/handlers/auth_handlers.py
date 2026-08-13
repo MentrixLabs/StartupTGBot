@@ -70,7 +70,8 @@ async def process_register_password(message: Message, state: FSMContext):
             return
 
         # 3. Привязываем tg_id к пользователю (если бекенд поддерживает)
-        await api.update_tg_id(message.from_user.id)
+        user_lang = message.from_user.language_code or "en"
+        await api.update_tg_id(message.from_user.id, local_kw=user_lang)
 
         # 4. Сохраняем токен в FSM
         await state.update_data(token=token)
@@ -132,8 +133,9 @@ async def process_login_password(message: Message, state: FSMContext):
             await message.answer(f"❌ Токен недействителен: {str(e)}")
             return
 
+        user_lang = message.from_user.language_code or "en"
         # Привязываем tg_id, если его ещё нет
-        await api.update_tg_id(message.from_user.id)
+        await api.update_tg_id(message.from_user.id, local_kw=user_lang)
 
         await state.update_data(token=token)
         await state.clear()

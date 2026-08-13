@@ -41,9 +41,13 @@ class APIClient:
                     raise Exception(f"API error {resp.status}: {error_msg}")
                 return await resp.json()
 
-    async def update_tg_id(self, tg_id: int) -> Dict:
-        """Привязать Telegram ID к текущему пользователю (требуется токен)."""
-        return await self._request("PUT", "/auth/update_tg_id", data={"tg_id": tg_id})
+    async def update_tg_id(self, tg_id: int, local_kw: str = "ru") -> Dict:
+        return await self._request(
+            "PUT",
+            "/auth/update_tg_id",
+            data={"tg_id": tg_id},
+            params={"local_kw": local_kw}   # ← передаём как query‑параметр
+        )
 
     # ----- Аутентификация -----
     async def register(self, username: str, email: str, password: str) -> Dict:
