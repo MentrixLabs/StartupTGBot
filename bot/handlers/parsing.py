@@ -42,4 +42,3 @@ async def add_goods_url(message: Message, state: FSMContext):
         parse_mode="Markdown",
         reply_markup=main_actions_kb
     )
-    await state.clear()

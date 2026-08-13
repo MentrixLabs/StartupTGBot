@@ -75,7 +75,6 @@ async def process_register_password(message: Message, state: FSMContext):
 
         # 4. Сохраняем токен в FSM
         await state.update_data(token=token)
-        await state.clear()
 
         await message.answer(
             "✅ Регистрация успешна! Вы авторизированы.",
@@ -138,7 +137,6 @@ async def process_login_password(message: Message, state: FSMContext):
         await api.update_tg_id(message.from_user.id, local_kw=user_lang)
 
         await state.update_data(token=token)
-        await state.clear()
 
         await message.answer(
             "✅ Вход выполнен!",
